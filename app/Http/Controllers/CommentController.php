@@ -3,12 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Comment;
-use App\Post;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
 
-class PostController extends Controller
+class CommentController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -27,7 +26,7 @@ class PostController extends Controller
      */
     public function create()
     {
-        return view('post.create');
+        //
     }
 
     /**
@@ -38,13 +37,12 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        $post = new Post();
-        $post->title = $request->input('title');
-        $post->content = $request->input('content');
-        $post->save();
-
-        return redirect(route('post.create'))
-                ->withSuccess('create success');
+        $comment = new Comment();
+        $comment->content = $request->input('content');
+        $comment->post_id = $request->input('post_id');
+        $comment->save();
+        return redirect(route('post.show',$comment->post_id))
+                ->withSuccess('Comment Success');
     }
 
     /**
@@ -55,9 +53,7 @@ class PostController extends Controller
      */
     public function show($id)
     {
-        $post = Post::find($id);
-        $comments = $post->comments()->paginate(config('blog.comment_per_page'));
-        return view('post.show',compact('post','comments'));
+        //
     }
 
     /**
@@ -68,8 +64,7 @@ class PostController extends Controller
      */
     public function edit($id)
     {
-        $post = Post::findOrFail($id);
-        return view('post.update',$post->toArray());
+        //
     }
 
     /**
@@ -81,12 +76,7 @@ class PostController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $post = Post::findOrfail($id);
-        $post->title = $request->input('title');
-        $post->content = $request->input('content');
-        $post->save();
-        return redirect(route('post.edit',$id))
-                ->withSuccess('Update Success');
+        //
     }
 
     /**
@@ -97,9 +87,10 @@ class PostController extends Controller
      */
     public function destroy($id)
     {
-        $post = Post::findOrFail($id);
-        $post->delete();
-        return redirect('/')
+        $comment = Comment::findOrFail($id);
+        $postId = $comment->post_id;
+        $comment->delete();
+        return redirect(route('post.show',$postId))
                 ->withSuccess('Delete Success');
     }
 }

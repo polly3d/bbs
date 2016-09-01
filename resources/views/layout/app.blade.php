@@ -35,11 +35,11 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="#">Laravel Post</a>
+                <a class="navbar-brand" href="{{ route('home') }}">Laravel Post</a>
             </div>
             <div id="navbar" class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li class="active"><a href="#">Home</a></li>
+                    <li class="active"><a href="{{ route('home') }}">Home</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                     <li><a href="#">Login</a></li>
@@ -49,16 +49,7 @@
         </div><!--/.container-fluid -->
     </nav>
 
-    <!-- Main component for a primary marketing message or call to action -->
-    <div class="jumbotron">
-        <h1>Laravel Post</h1>
-        <p>
-            This is a laravel Post site.You can create edit and delete you post.You Also can comment the post.Enjoy youself!
-        </p>
-        <p>
-            <a class="btn btn-lg btn-primary" href="{{ route('post.create') }}" role="button">Create Post</a>
-        </p>
-    </div>
+
 
     @yield('content')
 

@@ -42,6 +42,24 @@ class PostTest extends TestCase
     /**
      * @test
      */
+    public function 获取某个id的Post并且显示该Post的Comment()
+    {
+        $post = factory(Post::class)->create(['title'=>'my post','content'=>'my content']);
+        $comment = factory(\App\Comment::class)->create(['post_id'=>$post->id]);
+
+        $expected = DB::table('posts')->where(['id'=>$post->id])->first();
+        $expectedComment = DB::table('comments')->where(['post_id'=>$post->id])->first();
+
+        $actual = Post::findOrFail($post->id);
+        $actualComment = $actual->comments->first();
+
+        $this->assertEquals($expected->title,$actual->title);
+        $this->assertEquals($expectedComment->content,$actualComment->content);
+    }
+
+    /**
+     * @test
+     */
     public function 修改某个id的Post()
     {
         factory(Post::class,10)->create();

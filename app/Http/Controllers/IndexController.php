@@ -11,7 +11,7 @@ class IndexController extends Controller
 {
     public function index()
     {
-        $posts = Post::all();
+        $posts = Post::paginate(config('blog.post_per_page'));
         return view('home.index',compact('posts'));
     }
 }

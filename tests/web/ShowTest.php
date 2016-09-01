@@ -24,6 +24,18 @@ class ShowTest extends TestCase
     /**
      * @test
      */
+    public function 显示所有Post并分页()
+    {
+        factory(Post::class,100)->create();
+
+        $this->visit('/')
+            ->see('pagination');
+
+    }
+
+    /**
+     * @test
+     */
     public function 显示某个Post和Post的所有Comment()
     {
         $post = factory(Post::class)->create(['title'=>'my post']);
