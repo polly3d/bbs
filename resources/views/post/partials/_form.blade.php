@@ -7,3 +7,4 @@
     <label for="">content</label>
     <textarea name="content" class="form-control" rows="10">{{ $content or '' }}</textarea>
 </div>
+<input name="user_id" type="text" hidden value="{{ Auth::user()->id }}">

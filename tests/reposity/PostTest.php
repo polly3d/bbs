@@ -4,10 +4,15 @@ use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use App\Post;
+use App\User;
 
 class PostTest extends TestCase
 {
     use DatabaseMigrations;
+
+    /** @var  User */
+    protected $user;
+
 
     /**
      * @test
@@ -15,7 +20,7 @@ class PostTest extends TestCase
     public function 获取所有Post()
     {
         /** Arrange */
-        factory(Post::class,10)->create();
+        $this->createTenPost();
         $expected = DB::table('posts')->get()->count();
 
         /** Act */
@@ -30,7 +35,7 @@ class PostTest extends TestCase
      */
     public function 显示某个id的Post()
     {
-        factory(Post::class,10)->create();
+        $this->createTenPost();
         $random_id = mt_rand(1,10);
         $expected = DB::table('posts')->where(['id'=>$random_id])->first();
 
@@ -39,13 +44,27 @@ class PostTest extends TestCase
         $this->assertEquals($expected->title,$actual->title);
     }
 
+    protected function createTenPost()
+    {
+        $this->user = $this->getUser();
+        factory(Post::class,10)->create(['user_id'=>$this->user->id]);
+    }
+
     /**
      * @test
      */
     public function 获取某个id的Post并且显示该Post的Comment()
     {
-        $post = factory(Post::class)->create(['title'=>'my post','content'=>'my content']);
-        $comment = factory(\App\Comment::class)->create(['post_id'=>$post->id]);
+        $this->user = $this->getUser();
+        $post = factory(Post::class)->create([
+            'title'=>'my post',
+            'content'=>'my content',
+            'user_id'=>$this->user->id,
+        ]);
+        $comment = factory(\App\Comment::class)->create([
+            'post_id'=>$post->id,
+            'user_id'=>$this->user->id,
+        ]);
 
         $expected = DB::table('posts')->where(['id'=>$post->id])->first();
         $expectedComment = DB::table('comments')->where(['post_id'=>$post->id])->first();
@@ -62,7 +81,7 @@ class PostTest extends TestCase
      */
     public function 修改某个id的Post()
     {
-        factory(Post::class,10)->create();
+        $this->createTenPost();
         $random_id = mt_rand(1,10);
         $expected = DB::table('posts')->where(['id'=>$random_id])->first();
 
@@ -78,7 +97,7 @@ class PostTest extends TestCase
      */
     public function 删除某个id的Post()
     {
-        factory(Post::class,10)->create();
+        $this->createTenPost();
         $random_id = mt_rand(1,10);
         $expected = null;
 
@@ -95,9 +114,11 @@ class PostTest extends TestCase
      */
     public function 新建Post()
     {
+        $this->user = $this->getUser();
         $data = [
-            'title' =>  'hello',
+            'title'     =>  'hello',
             'content'   =>  'hello content',
+            'user_id'   =>  $this->user->id,
         ];
 
         $post = Post::create($data);

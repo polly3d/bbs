@@ -10,9 +10,48 @@
 
 ## 第二阶段
 
+* 加入user
 * 加入Authentication
+    * 增加用户注册页面
+    * 增加用户登陆页面
+* 增删改查Post需要登陆
+* 增删改查Comment需要登陆
+* 仅能修改自己的Comment(Comment暂时不做修改功能吧，懒!）
+* 仅能删除自己的Comment
 
 
 ## 第三阶段
 
 * 待定
+
+
+
+# 常用断言总结
+
+## 未分类
+* assertEquals(mixed $expected, mixed $actual),判断两个值是否全等；
+
+
+## 数据库相关
+
+* seeInDatabase(string $table, array $data, $connection = null)，判断数据存在数据库中。
+* notSeeInDatabase(string $table, array $data, $connection = null)，判断数据不存在数据库中。
+* seed($class = 'DatabaseSeeder')，运行数据库seed
+
+
+## 路由相关
+
+* visit($uri)，访问某个地址
+* visitRoute($route, $parameters = [])，根据路由名称访问
+* seePageIs($uri)，当前页面是否与$uri页面相同
+* seeRouteIs($route, $parameters = [])
+
+## 页面元素相关
+
+* type($text, $element)，给$element指定的input表单输入$text内容
+* press($buttonText)，提交使用button的表单
+* submitForm($buttonText, $inputs = [], $uploads = []),提交表单
+
+## 认证相关
+
+* seeIsAuthenticated($guard = null)，用户是否认证

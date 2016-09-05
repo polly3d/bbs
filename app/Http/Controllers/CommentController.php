@@ -6,9 +6,19 @@ use App\Comment;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
+use Auth;
 
 class CommentController extends Controller
 {
+    /**
+     * CommentController constructor.
+     */
+    public function __construct()
+    {
+        $this->middleware('auth')->only('store','destroy');
+    }
+
+
     /**
      * Display a listing of the resource.
      *
@@ -40,6 +50,7 @@ class CommentController extends Controller
         $comment = new Comment();
         $comment->content = $request->input('content');
         $comment->post_id = $request->input('post_id');
+        $comment->user_id = Auth::user()->id;
         $comment->save();
         return redirect(route('post.show',$comment->post_id))
                 ->withSuccess('Comment Success');

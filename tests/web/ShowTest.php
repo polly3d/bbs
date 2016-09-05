@@ -10,15 +10,27 @@ class ShowTest extends TestCase
 {
     use DatabaseMigrations;
 
+    protected $user;
+
+    protected function setUp()
+    {
+        parent::setUp();
+        $this->user = $this->getUser();
+    }
+
     /**
      * @test
      */
     public function 显示所有Post()
     {
-        factory(Post::class)->create(['title'=>'my post']);
+        factory(Post::class)->create([
+            'title'=>'my post',
+            'user_id' => $this->user->id,
+        ]);
 
         $this->visit('/')
-            ->see('my post');
+            ->see('my post')
+            ->see($this->user->name);
     }
 
     /**
@@ -26,10 +38,13 @@ class ShowTest extends TestCase
      */
     public function 显示所有Post并分页()
     {
-        factory(Post::class,100)->create();
+        factory(Post::class,100)->create([
+            'user_id'   =>  $this->user->id,
+        ]);
 
         $this->visit('/')
-            ->see('pagination');
+            ->see('pagination')
+            ->see($this->user->name);
 
     }
 
@@ -38,11 +53,25 @@ class ShowTest extends TestCase
      */
     public function 显示某个Post和Post的所有Comment()
     {
-        $post = factory(Post::class)->create(['title'=>'my post']);
-        $comment = factory(Comment::class)->create(['content'=>'my comment','post_id'=>$post->id]);
+        $post = factory(Post::class)->create([
+            'title'=>'my post',
+            'user_id'=>$this->user->id,
+        ]);
+        $comment = factory(Comment::class)->create([
+            'content'=>'my comment',
+            'post_id'=>$post->id,
+            'user_id'=>$this->user->id,
+        ]);
 
         $this->visit(route('post.show',$post->id))
             ->see('my post')
-            ->see('my comment');
+            ->see('my comment')
+            ->see($this->user->name)
+            ->see('comment by')
+            ->dontSee('Edit');
+
+        $this->actingAs($this->user)
+            ->visit(route('post.show',$post->id))
+            ->see('Edit');
     }
 }

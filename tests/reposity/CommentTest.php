@@ -9,12 +9,24 @@ use App\Comment;
 class CommentTest extends TestCase
 {
     use DatabaseMigrations;
+
+    protected $user;
+
+    protected function setUp()
+    {
+        parent::setUp();
+        $this->user = $this->getUser();
+    }
+
     /**
      * @test
      */
     public function 某个Post下的所有Comment()
     {
-        factory(Comment::class,10)->create();
+        factory(Comment::class,10)->create([
+            'user_id'   => $this->user->id,
+        ]);
+
         $postID = 4;
         $expected = DB::table('comments')->where('post_id',$postID)->get()->count();
 
@@ -32,6 +44,7 @@ class CommentTest extends TestCase
         $comment = new Comment();
         $comment->content = 'hello comment';
         $comment->post_id = $postId;
+        $comment->user_id = $this->user->id;
         $comment->save();
 
         $this->seeInDatabase('comments',$comment->toArray());
@@ -46,6 +59,7 @@ class CommentTest extends TestCase
         $comment = new Comment();
         $comment->content = 'hello comment';
         $comment->post_id = $postId;
+        $comment->user_id = $this->user->id;
         $comment->save();
 
         $newComment = Comment::find($comment->id);
@@ -64,6 +78,7 @@ class CommentTest extends TestCase
         $comment = new Comment();
         $comment->content = 'hello comment';
         $comment->post_id = $postId;
+        $comment->user_id = $this->user->id;
         $comment->save();
         $this->seeInDatabase('comments',$comment->toArray());
 

@@ -22,4 +22,21 @@ abstract class TestCase extends Illuminate\Foundation\Testing\TestCase
 
         return $app;
     }
+
+    /**
+     * @return \App\User
+     */
+    protected function getUser($username = 'wang@wang.com', $password = '123456')
+    {
+        $userData = [
+            'email'     =>  $username,
+            'password'  =>  $password,
+        ];
+
+        $user = factory(\App\User::class)->create([
+            'email' => $userData['email'],
+            'password'  => bcrypt($userData['password']),
+        ]);
+        return $user;
+    }
 }

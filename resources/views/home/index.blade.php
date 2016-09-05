@@ -18,7 +18,10 @@
             @foreach($posts as $post)
                 <li>
                     <a href="{{ route('post.show',$post->id) }}">{{ $post->title }}</a>
-                    <p>{{ $post->created_at }}</p>
+                    <p>
+                        <span>{{ $post->user->name }}</span>
+                        <span>created_at:{{ $post->created_at }}</span>
+                    </p>
                 </li>
             @endforeach
         </ul>
