@@ -17,7 +17,14 @@ class CreatePostsTable extends Migration
             $table->increments('id');
             $table->string('title');
             $table->text('content');
+            $table->text('content_md');
+            $table->integer('category_id')->unsign();
             $table->integer('user_id')->unsign();
+            $table->integer('click_count')->unsign();
+            $table->integer('vote_count')->unsign();
+            $table->integer('comment_count')->unsign();
+            $table->enum('is_excellent',['yes','no']);
+            $table->softDeletes();
             $table->timestamps();
         });
     }

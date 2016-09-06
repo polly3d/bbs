@@ -22,19 +22,23 @@ $factory->define(App\User::class, function (Faker\Generator $faker) {
     ];
 });
 
-
-
-$factory->define(\App\Post::class,function(Faker\Generator $faker){
+$factory->define(\App\Entity\Category::class,function(Faker\Generator $faker){
     return [
-        'title'     =>  $faker->sentence,
-        'content'   =>  $faker->paragraph,
+        'name'  =>  $faker->name,
     ];
 });
 
-$factory->define(\App\Comment::class,function(Faker\Generator $faker){
-    $randomPostID = range(1,10);
+
+$factory->define(\App\Entity\Post::class,function(Faker\Generator $faker){
+    $content_md = "#{$faker->sentence}\n\t##{$faker->sentence}";
     return [
-        'content'   =>  $faker->paragraph,
-        'post_id'   =>  $faker->randomElement($randomPostID),
+        'title'         =>  $faker->sentence,
+        'content_md'    =>  $faker->paragraph,
+        'click_count'  =>  $faker->randomDigit,
+        'vote_count'   =>  $faker->randomDigit,
+        'comment_count'   =>  $faker->randomDigit,
+        'is_excellent'  =>  $faker->randomElement(['yes','no']),
+        'created_at'    =>  $faker->dateTimeBetween('-3 months'),
+        'updated_at'     =>  $faker->dateTimeBetween('-10 days'),
     ];
 });

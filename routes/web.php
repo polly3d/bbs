@@ -11,12 +11,11 @@
 |
 */
 
-Route::get('/', [
+Route::get('/',[
     'as'    =>  'home',
-    'uses'  =>  'IndexController@index'
-]);
+    function(){
 
-Route::resource('/post','PostController',['except'=>['index']]);
-Route::resource('/comment','CommentController',['only'=>['store','destroy']]);
+    }
+]);
 
 Auth::routes();
