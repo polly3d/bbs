@@ -127,4 +127,23 @@ class PostShowTest extends TestCase
 
         $this->assertEquals($expected->count(),$actual->count());
     }
+
+    /**
+     * @test
+     */
+    public function 查看单条post()
+    {
+        $postId = 1;
+        $expected['post'] = DB::table('posts')
+            ->where('id',$postId)
+            ->first();
+        $expected['comments'] = DB::table('comments')
+            ->where('post_id',$postId)
+            ->get();
+
+        $actual = $this->postShowService->getById($postId);
+
+        $this->assertEquals($expected['post']->title,$actual->title);
+        $this->assertEquals($expected['comments']->count(),$actual->comments->count());
+    }
 }

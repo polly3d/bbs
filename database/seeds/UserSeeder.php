@@ -11,12 +11,12 @@ class UserSeeder extends Seeder
      */
     public function run()
     {
-        $user = new \App\User();
+        $user = new \App\Entity\User();
         $user->name = "wang";
         $user->email = "wang@wang.com";
         $user->password = bcrypt('123456');
         $user->save();
 
-        factory(\App\User::class,10)->create();
+        factory(\App\Entity\User::class,10)->create();
     }
 }

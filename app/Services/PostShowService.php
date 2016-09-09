@@ -10,7 +10,9 @@ namespace App\Services;
 
 
 use App\Entity\Category;
+use App\Entity\Comment;
 use App\Entity\Post;
+use App\Entity\User;
 use Illuminate\Database\Eloquent\Collection;
 
 class PostShowService
@@ -96,11 +98,27 @@ class PostShowService
         return Post::zeroComment()->recent();
     }
 
+    /**
+     * 通过分类查找post
+     * @param $category_id
+     * @return Post
+     */
     public function getByCategory($category_id)
     {
         $posts = Category::findOrFail($category_id)
                     ->posts;
         return $posts;
+    }
+
+
+    /**
+     * 通过id获取post内容和post的所有回复
+     * @param $postId
+     */
+    public function getById($postId)
+    {
+        $post = Post::with('comments')->findOrFail($postId);
+        return $post;
     }
 
 

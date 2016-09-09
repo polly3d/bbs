@@ -24,7 +24,7 @@ abstract class TestCase extends Illuminate\Foundation\Testing\TestCase
     }
 
     /**
-     * @return \App\User
+     * @return \App\Entity\User
      */
     protected function getUser($username = 'wang@wang.com', $password = '123456')
     {
@@ -33,7 +33,7 @@ abstract class TestCase extends Illuminate\Foundation\Testing\TestCase
             'password'  =>  $password,
         ];
 
-        $user = factory(\App\User::class)->create([
+        $user = factory(\App\Entity\User::class)->create([
             'email' => $userData['email'],
             'password'  => bcrypt($userData['password']),
         ]);

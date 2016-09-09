@@ -11,7 +11,7 @@
 |
 */
 
-$factory->define(App\User::class, function (Faker\Generator $faker) {
+$factory->define(\App\Entity\User::class, function (Faker\Generator $faker) {
     static $password;
 
     return [
@@ -40,5 +40,21 @@ $factory->define(\App\Entity\Post::class,function(Faker\Generator $faker){
         'is_excellent'  =>  $faker->randomElement(['yes','no']),
         'created_at'    =>  $faker->dateTimeBetween('-3 months'),
         'updated_at'     =>  $faker->dateTimeBetween('-10 days'),
+    ];
+});
+
+$factory->define(\App\Entity\Comment::class,function(Faker\Generator $faker){
+    $content_md = "#{$faker->sentence}\n\t##{$faker->sentence}";
+    return [
+        'content_md'    =>  $content_md,
+        'vote_count'    =>  $faker->randomDigit,
+    ];
+});
+
+$factory->define(\App\Entity\Vote::class,function(Faker\Generator $faker){
+    $type = [\App\Entity\Post::class,\App\Entity\Comment::class];
+    return [
+        'voteable_id'   => $faker->numberBetween(1,10),
+        'voteable_type' => $faker->randomElement($type),
     ];
 });

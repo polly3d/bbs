@@ -31,4 +31,14 @@ class Post extends Model
         }
     }
 
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
+    }
+
+    public function votes()
+    {
+        return $this->morphMany(Vote::class,'voteable');
+    }
+
 }

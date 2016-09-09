@@ -12,11 +12,19 @@ class PostSeeder extends Seeder
     public function run()
     {
         $faker = app(Faker\Generator::class);
-        $users = \App\User::pluck('id');
+        $users = \App\Entity\User::pluck('id');
         $categories = \App\Entity\Category::pluck('id');
-        factory(\App\Entity\Post::class,100)->create([
+        $user_1 = factory(\App\Entity\Post::class,50)->make([
+            'user_id'       =>  1,
+            'category_id'   =>  $faker->randomElement($categories->toArray()),
+        ]);
+
+        $user_ohter = factory(\App\Entity\Post::class,50)->make([
             'user_id'   =>  $faker->randomElement($users->toArray()),
             'category_id'   =>  $faker->randomElement($categories->toArray()),
         ]);
+
+        DB::table('posts')
+            ->insert(array_merge($user_1->toArray(),$user_ohter->toArray()));
     }
 }

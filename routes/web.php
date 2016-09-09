@@ -11,11 +11,6 @@
 |
 */
 
-Route::get('/',[
-    'as'    =>  'home',
-    function(){
-
-    }
-]);
+Route::get('/','HomeController@index');
 
 Auth::routes();
