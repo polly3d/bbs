@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Seeder;
 
-class CommentSeeder extends Seeder
+class PostVoteSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -19,11 +19,16 @@ class CommentSeeder extends Seeder
         for($i = 0; $i < 100; $i++)
         {
             $post = $posts->random();
-            factory(\App\Entity\Comment::class)->create([
-                'user_id'   =>  $faker->randomElement($usersIds),
-                'post_id'   =>  $post->id,
+            $userId = $faker->randomElement($usersIds);
+            $alreadyVote = $post->votes()
+                ->where('user_id',$userId)
+                ->count();
+            if($alreadyVote)
+                continue;
+            $post->votes()->create([
+                'user_id' => $userId,
             ]);
-            $post->increment('comment_count');
+            $post->increment('vote_count',1);
         }
     }
 }

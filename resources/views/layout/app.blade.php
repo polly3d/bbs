@@ -13,6 +13,7 @@
 
     <!-- Bootstrap core CSS -->
     <link href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -39,7 +40,8 @@
             </div>
             <div id="navbar" class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li class="active"><a href="{{ route('home') }}">Home</a></li>
+                    <li @if(Route::currentRouteName() == 'home') class="active" @endif><a href="{{ route('home') }}">Home</a></li>
+                    <li @if(Route::currentRouteName() == 'post.index') class="active" @endif><a href="{{ route('post.index') }}">Post</a></li>
                 </ul>
                 <!-- Right Side Of Navbar -->
                 <ul class="nav navbar-nav navbar-right">

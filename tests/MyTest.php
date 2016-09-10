@@ -6,17 +6,6 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class MyTest extends TestCase
 {
-    use DatabaseMigrations;
-
-    protected $user_id;
-
-    protected function setUp()
-    {
-        parent::setUp();
-        $this->artisan('db:seed');
-
-        $this->user_id = 1;
-    }
 
     /**
      * A basic test example.
@@ -25,18 +14,20 @@ class MyTest extends TestCase
      */
     public function testExample()
     {
-        factory(\App\Entity\Vote::class,20)->create([
-            'user_id'       =>  $this->user_id,
-            'voteable_type' =>  \App\Entity\Post::class,
-        ]);
+        //发贴最多的人 and 回复最多的人
+        $usersByCreatePost = \App\Entity\User::withCount('posts')
+            ->withCount('comments')
+            ->get();
 
-        factory(\App\Entity\Vote::class,10)->create([
-            'user_id'       =>  $this->user_id,
-            'voteable_type' =>  \App\Entity\Comment::class,
-        ]);
+        foreach($usersByCreatePost as &$user)
+        {
+            $user->active_count = $user->comments_count + $user->posts_count;
+        }
 
-        $user = \App\Entity\User::find($this->user_id);
-        $data = $user->votePosts()->count();
-        var_dump($data);
+        $expected = $usersByCreatePost->sortByDesc('active_count')
+            ->take(config('blog.active_user_number'));
+
+        $this->assertEquals(config('blog.active_user_number'),$usersByCreatePost->count());
+
     }
 }

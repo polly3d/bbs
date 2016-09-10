@@ -1,0 +1,95 @@
+ul{
+    padding: 0;
+    list-style: none;
+}
+a:hover,a:active
+{
+    text-decoration: none;
+}
+
+.index-post li
+{
+    padding-top: 1em;
+    padding-bottom: 1em;
+    border-bottom: 1px solid #f2f2f2;
+}
+
+.index-post li .avatar a
+{
+    white-space: nowrap;
+    -ms-text-overflow: ellipsis;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    float: left;
+    display: block;
+    width: 4em;
+    height: 4em;
+    border: 1px solid #262825;
+    text-align: center;
+    vertical-align: middle;
+    line-height:4em;
+    -webkit-border-radius: 4em;
+    -moz-border-radius: 4em;
+    border-radius: 4em;
+}
+
+
+.index-post li .post-title
+{
+    margin-top: 1.2em;
+    margin-left: 5em;
+    margin-right: 8em;
+}
+
+.index-post li .meta
+{
+    float: right;
+    margin-top: 1.2em;
+}
+
+.post h1
+{
+    font-size: 2em;
+}
+
+.post img
+{
+    width: 100%;
+}
+
+.post .vote-btn
+{
+    margin-top: 1.5em;
+    margin-bottom: 0.5em;
+    text-align: center;
+}
+
+
+.comment li
+{
+    border-bottom: 1px solid #f2f2f2;
+}
+
+.post-filter
+{
+    margin: 8px 0 5px;
+}
+
+.post-filter .active
+{
+    border-bottom: 1px solid #262825;
+}
+
+.post-list li
+{
+    padding-top: 1em;
+    min-height: 5.5em;
+    border-bottom: 1px solid #f2f2f2;
+}
+
+.text-no-wrap
+{
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}

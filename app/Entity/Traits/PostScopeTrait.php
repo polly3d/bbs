@@ -30,4 +30,9 @@ trait PostScopeTrait
     {
         return $query->where('comment_count',0);
     }
+
+    public function scopeHot(Builder $query)
+    {
+        return $query->orderBy('click_count','desc');
+    }
 }

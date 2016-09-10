@@ -11,6 +11,14 @@
 |
 */
 
-Route::get('/','HomeController@index');
+Route::get('/','HomeController@index')->name('home');
+
+Route::resource('/post','PostController');
+
+Route::resource('/comment','CommentController');
+
+Route::resource('/user','UserController');
+
+Route::resource('/vote','VoteController');
 
 Auth::routes();

@@ -19,7 +19,7 @@ class PostShowService
 {
     const EXCELLENT = 'excellents';
     const RENCTE = 'recent';
-    const ACTIVE = 'recent';
+    const ACTIVE = 'active';
     const VOTE = 'vote';
     const ZERO_COMMENT = 'zeorComment';
 
@@ -106,7 +106,7 @@ class PostShowService
     public function getByCategory($category_id)
     {
         $posts = Category::findOrFail($category_id)
-                    ->posts;
+                    ->posts();
         return $posts;
     }
 
@@ -117,8 +117,40 @@ class PostShowService
      */
     public function getById($postId)
     {
-        $post = Post::with('comments')->findOrFail($postId);
-        return $post;
+        $data = [];
+
+        //post、user comments and vote
+        $post = Post::with('comments','user','votes','votes.user')
+            ->with(['user.posts' => function($query){
+                $query->orderBy('created_at','desc')
+                    ->take(config('blog.right_side_user_post'));
+            }])
+            ->findOrFail($postId);
+
+        //category posts
+        $categoryPosts = $this->getByCategory($post->category_id);
+        $categoryPosts = $categoryPosts->recent()
+            ->take(config('blog.right_side_catogry_post'))
+            ->get();
+
+        $data['post'] = $post;
+        $data['categoryPosts'] = $categoryPosts;
+        return $data;
+    }
+
+    /**
+     * 热门主题
+     * 点击率高的主题
+     * @param $limit
+     * @return Post
+     */
+    public function getHotPosts($limit)
+    {
+        $hotPosts = Post::hot()
+            ->recent()
+            ->take($limit)
+            ->get();
+        return $hotPosts;
     }
 
 

@@ -16,15 +16,19 @@ use App\Entity\Vote;
 class UserService
 {
 
+    public function getUserById($id)
+    {
+        return User::findOrFail($id);
+    }
+
     /**
      * 用户的posts
-     * @param $userId
+     * @param User $user
      * @param bool $paginate
      * @return Post
      */
-    public function getPostsByUserId($userId, $paginate = false)
+    public function getPostsByUser(User $user, $paginate = false)
     {
-        $user = User::findOrFail($userId);
         if($paginate)
         {
             $limite = config('blog.user_center_posts_per_page');
@@ -41,9 +45,14 @@ class UserService
         return $post;
     }
 
-    public function getCommentsByUserId($userId, $paginate = false)
+    /**
+     * 用户的回复
+     * @param User $user
+     * @param bool $paginate
+     * @return mixed
+     */
+    public function getCommentsByUser(User $user, $paginate = false)
     {
-        $user = User::findOrFail($userId);
         if($paginate)
         {
             $limite = config('blog.user_center_comments_per_page');
@@ -62,14 +71,37 @@ class UserService
 
     /**
      * 获取某用户所有点赞过的post
-     * @param $user_id
+     * @param User $user
+     * @return \Illuminate\Database\Eloquent\Collection
      */
-    public function getUserVotePost($user_id)
+    public function getVotePostByUser(User $user)
     {
-        $user = User::findOrFail($user_id);
         $posts = $user->votePosts()
             ->get();
         return $posts;
+    }
+
+
+    /**
+     * 获得活跃用户
+     * @param $limit
+     */
+    public function getActiveUsers($limit)
+    {
+        //发贴最多的人 and 回复最多的人
+        $usersByCreatePost = \App\Entity\User::withCount('posts')
+            ->withCount('comments')
+            ->get();
+
+        foreach($usersByCreatePost as &$user)
+        {
+            $user->active_count = $user->comments_count + $user->posts_count * 4;
+        }
+
+        $activeUser = $usersByCreatePost->sortByDesc('active_count')
+            ->take($limit);
+
+        return $activeUser;
     }
 
 

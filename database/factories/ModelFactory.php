@@ -31,23 +31,26 @@ $factory->define(\App\Entity\Category::class,function(Faker\Generator $faker){
 
 $factory->define(\App\Entity\Post::class,function(Faker\Generator $faker){
     $content_md = "#{$faker->sentence}\n\t##{$faker->sentence}";
+    $categories = \App\Entity\Category::pluck('id')->toArray();
     return [
+        'category_id'   =>  $faker->randomElement($categories),
         'title'         =>  $faker->sentence,
         'content_md'    =>  $faker->paragraph,
-        'click_count'  =>  $faker->randomDigit,
-        'vote_count'   =>  $faker->randomDigit,
-        'comment_count'   =>  $faker->randomDigit,
+        'click_count'   =>  $faker->randomDigit,
         'is_excellent'  =>  $faker->randomElement(['yes','no']),
         'created_at'    =>  $faker->dateTimeBetween('-3 months'),
-        'updated_at'     =>  $faker->dateTimeBetween('-10 days'),
+        'updated_at'    =>  $faker->dateTimeBetween('-10 days'),
     ];
 });
 
 $factory->define(\App\Entity\Comment::class,function(Faker\Generator $faker){
     $content_md = "#{$faker->sentence}\n\t##{$faker->sentence}";
+    $time = $faker->dateTimeBetween('-2 months');
     return [
         'content_md'    =>  $content_md,
         'vote_count'    =>  $faker->randomDigit,
+        'created_at'    =>  $time,
+        'updated_at'    =>  $time,
     ];
 });
 

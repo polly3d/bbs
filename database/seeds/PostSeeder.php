@@ -16,12 +16,10 @@ class PostSeeder extends Seeder
         $categories = \App\Entity\Category::pluck('id');
         $user_1 = factory(\App\Entity\Post::class,50)->make([
             'user_id'       =>  1,
-            'category_id'   =>  $faker->randomElement($categories->toArray()),
         ]);
 
         $user_ohter = factory(\App\Entity\Post::class,50)->make([
             'user_id'   =>  $faker->randomElement($users->toArray()),
-            'category_id'   =>  $faker->randomElement($categories->toArray()),
         ]);
 
         DB::table('posts')
