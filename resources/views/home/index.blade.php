@@ -15,10 +15,10 @@
                         <a href="{{ route('user.show',$post->user->id) }}">[{{ $post->user->name }}]</a>
                     </div>
                     <div class="meta">
-                        <a href="">{{ $post->vote_count }}点赞 ⋅ {{ $post->comment_count }}回复</a>
+                        <a href="{{ route('post.show',$post->id) }}">{{ $post->vote_count }}点赞 ⋅ {{ $post->comment_count }}回复</a>
                     </div>
                     <div class="post-title" style="white-space:nowrap;overflow: hidden;text-overflow: ellipsis;">
-                        <a href="">[{{ $post->category->name }}]</a>
+                        [{{ $post->category->name }}]
                         <a href="{{ route('post.show',$post->id) }}">{{ $post->title }}</a>
                     </div>
 

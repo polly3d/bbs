@@ -4,12 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Entity\Category;
 use App\Polly3d\PostListNav;
+use App\Services\CategoryService;
 use App\Services\PostOperationService;
 use App\Services\PostShowService;
 use App\Services\UserService;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
+use Auth;
 
 class PostController extends Controller
 {
@@ -66,18 +68,7 @@ class PostController extends Controller
      */
     public function store(Request $request, PostOperationService $service)
     {
-        $rule = [
-            'title' => 'required|max:255',
-            'category_id' => 'required',
-            'content_md' => 'required',
-        ];
-        $message = [
-            'title.required' => '标题必须填写',
-            'title.max' => '标题过长',
-            'category_id.required' => '请选择分类',
-            'content_md.required' => '内容不能不空',
-        ];
-        $this->validate($request,$rule,$message);
+        $this->validePost($request);
 
         $post = $service->createPost($request->only('title','category_id','content_md'));
         return redirect(route('post.create'))
@@ -90,10 +81,11 @@ class PostController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(PostShowService $service,$id)
+    public function show(PostShowService $service, CategoryService $categoryService,$id)
     {
-        $data = $service->getById($id);
-        return view('home.post.show',$data);
+        $post = $service->getById($id);
+        $categoryPosts = $categoryService->getPostById($post->category_id);
+        return view('home.post.show',compact('post','categoryPosts'));
     }
 
     /**
@@ -102,9 +94,12 @@ class PostController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(PostShowService $service,$id)
     {
-        //
+        $post = $service->getByIdOnlyPost($id);
+        $data = $post->toArray();
+        $data['categories'] = Category::all();
+        return view('home.post.update',$data);
     }
 
     /**
@@ -114,9 +109,12 @@ class PostController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(PostOperationService $service,Request $request, $id)
     {
-        //
+        $this->validePost($request);
+        $service->updatePost($id,$request->only('title','category_id','content_md'));
+        return redirect(route('post.edit',$id))
+            ->withSuccess('修改成功');
     }
 
     /**
@@ -125,8 +123,43 @@ class PostController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(PostOperationService $service, $id)
     {
-        //
+        $result = $service->deletePost($id);
+        return redirect(route('post.index'))
+            ->withSuccess('删除成功');
+    }
+
+    /**
+     * 将帖子设为精华
+     * @param $id
+     */
+    public function toExcellent(PostOperationService $service, $id)
+    {
+        if(Auth::id() !== 1)
+        {
+            return redirect('/');
+        }
+
+        $post = $service->toExcellent($id);
+        return redirect(route('post.show',$id))
+            ->withSuccess('设置成功');
+
+    }
+
+    protected function validePost(Request $request)
+    {
+        $rule = [
+            'title' => 'required|max:255',
+            'category_id' => 'required',
+            'content_md' => 'required',
+        ];
+        $message = [
+            'title.required' => '标题必须填写',
+            'title.max' => '标题过长',
+            'category_id.required' => '请选择分类',
+            'content_md.required' => '内容不能不空',
+        ];
+        $this->validate($request,$rule,$message);
     }
 }

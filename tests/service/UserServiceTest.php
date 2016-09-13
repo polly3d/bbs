@@ -18,7 +18,7 @@ class UserServiceTest extends TestCase
         parent::setUp();
         $this->artisan('db:seed');
 
-        $this->user = \App\Entity\User::findOrFail(1);
+        $this->user = \App\Entity\User::findOrFail(11);
         $this->userService = $this->app->make(UserService::class);
     }
 
@@ -47,9 +47,9 @@ class UserServiceTest extends TestCase
             ->take(config('blog.user_center_comments_per_page'))
             ->get();
 
-        $posts = $this->userService->getCommentsByUser($this->user,true);
+        $comment = $this->userService->getCommentsByUser($this->user,true);
 
-        $this->assertEquals($expected->count(),$posts->count());
+        $this->assertEquals($expected->count(),$comment->count());
     }
 
     /**
@@ -100,6 +100,7 @@ class UserServiceTest extends TestCase
         $expected = DB::table('votes')
             ->where('user_id',$this->user->id)
             ->where('voteable_type',\App\Entity\Post::class)
+            ->take(config('blog.user_center_posts_per_page'))
             ->get();
 
         $posts = $this->userService->getVotePostByUser($this->user);

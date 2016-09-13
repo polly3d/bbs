@@ -13,12 +13,19 @@
 
 Route::get('/','HomeController@index')->name('home');
 
+Route::get('/post/{id}/excellent','PostController@toExcellent')->name('toExcellent');
 Route::resource('/post','PostController');
+
+Route::get('/category/{id}','CategoryController@posts')->name('category');
 
 Route::resource('/comment','CommentController');
 
+Route::get('/user/{id}/posts','UserController@posts')->name('userPosts');
+Route::get('/user/{id}/comments','UserController@comments')->name('userComments');
+Route::get('/user/{id}/votePost','UserController@votePost')->name('userVotePosts');
 Route::resource('/user','UserController');
 
-Route::resource('/vote','VoteController');
+Route::get('/vote/post/{id}','VoteController@votePost')->name('votePost');
+Route::get('/vote/comment/{id}','VoteController@voteComment')->name('voteComment');
 
 Auth::routes();

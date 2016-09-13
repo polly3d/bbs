@@ -61,12 +61,12 @@ class UserService
                 ->paginate($limite);
         }
 
-        $post = $user->comments()
+        $comments = $user->comments()
             ->orderBy('created_at','desc')
             ->take(config('blog.user_center_recent'))
             ->get();
 
-        return $post;
+        return $comments;
     }
 
     /**
@@ -77,7 +77,7 @@ class UserService
     public function getVotePostByUser(User $user)
     {
         $posts = $user->votePosts()
-            ->get();
+            ->paginate(config('blog.user_center_posts_per_page'));
         return $posts;
     }
 

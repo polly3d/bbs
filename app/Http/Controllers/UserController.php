@@ -89,4 +89,25 @@ class UserController extends Controller
     {
         //
     }
+
+    public function posts(UserService $service, $id)
+    {
+        $user = $service->getUserById($id);
+        $userPosts = $service->getPostsByUser($user,true);
+        return view('home.user.userPosts',compact('user','userPosts'));
+    }
+
+    public function comments(UserService $service, $id)
+    {
+        $user = $service->getUserById($id);
+        $userComments = $service->getCommentsByUser($user,true);
+        return view('home.user.userComments',compact('user','userComments'));
+    }
+
+    public function votePost(UserService $service, $id)
+    {
+        $user = $service->getUserById($id);
+        $userVotePosts = $service->getVotePostByUser($user);
+        return view('home.user.userVotePosts',compact('user','userVotePosts'));
+    }
 }

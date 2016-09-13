@@ -27,6 +27,26 @@ class PostOperationService
         }
     }
 
+    /**
+     * 帖子设为精华
+     * @param $id
+     * @return
+     */
+    public function toExcellent($id)
+    {
+        $post = Post::findOrFail($id);
+        if($post->is_excellent == 'no')
+        {
+            $post->is_excellent = 'yes';
+        }
+        else
+        {
+            $post->is_excellent = 'no';
+        }
+        $post->save();
+        return $post;
+    }
+
 
     /**
      * 创建post
@@ -46,12 +66,15 @@ class PostOperationService
      * @param $contentMd
      * @return Post|bool
      */
-    public function updatePost($id, $contentMd)
+    public function updatePost($id, $data)
     {
         $post = $this->checkPermission($id);
         if($post)
         {
-            $post->content_md = $contentMd;
+            foreach($data as $key=>$item)
+            {
+                $post->$key = $item;
+            }
             $post->save();
         }
         return $post;
@@ -59,6 +82,7 @@ class PostOperationService
 
     /**
      * 删除post
+     * 同时，需要删除帖子对应的comments和votes
      * @param $id
      * @return bool
      */
@@ -66,7 +90,11 @@ class PostOperationService
     {
         $post = $this->checkPermission($id);
         if($post)
+        {
+            $post->comments()->delete();
+            $post->votes()->delete();
             return $post->delete();
+        }
         return $post;
     }
 

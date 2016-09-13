@@ -113,20 +113,6 @@ class PostShowTest extends TestCase
         $this->assertEquals($expected->count(),$actual->count());
     }
 
-    /**
-     * @test
-     */
-    public function 根据category查看()
-    {
-        $category_id = DB::table('categories')->pluck('id');
-
-        $expected = DB::table('posts')
-            ->where('category_id',$category_id)
-            ->get();
-        $actual = $this->postShowService->getByCategory($category_id);
-
-        $this->assertEquals($expected->count(),$actual->count());
-    }
 
     /**
      * @test

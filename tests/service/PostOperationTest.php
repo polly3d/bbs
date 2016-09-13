@@ -44,17 +44,17 @@ class PostOperationTest extends TestCase
     public function 编辑()
     {
         $post = $this->createPost();
-        $contentMd = '#new content';
+        $data = ['content_md'=>'#new content'];
 
         //登陆后，方可编辑
-        $newPost = $this->postOperationService->updatePost($post->id,$contentMd);
-        $this->assertEquals($contentMd,$newPost->content_md);
+        $newPost = $this->postOperationService->updatePost($post->id,$data);
+        $this->assertEquals($data['content_md'],$newPost->content_md);
 
         //而且只能编辑自己的帖子
         $newUser = User::findOrFail(2);
         $this->actingAs($newUser);
-        $contentMd = '#new user content';
-        $newPost = $this->postOperationService->updatePost($post->id,$contentMd);
+        $data = '#new user content';
+        $newPost = $this->postOperationService->updatePost($post->id,$data);
         $this->assertFalse($newPost);
 
     }

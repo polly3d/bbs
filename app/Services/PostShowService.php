@@ -31,83 +31,64 @@ class PostShowService
      */
     public function getFilterHasPaginate($filter,$limit = 20)
     {
-        switch($filter)
-        {
-            case self::EXCELLENT:
-                $post = $this->getExcellents();
-                break;
-            case self::ACTIVE:
-                $post = $this->getActives();
-                break;
-            case self::VOTE:
-                $post = $this->getVotes();
-                break;
-            case self::ZERO_COMMENT:
-                $post = $this->getZeroComent();
-                break;
-            default:
-                $post = $this->getRecents();
-                break;
-        }
-
-        return $post->paginate($limit);
+        $post = app()->make(Post::class);
+        return $post->getFilterHasPaginate($filter)
+            ->paginate($limit);
     }
 
     /**
      * 精华
      * @return Post
      */
-    public function getExcellents()
+    public function getExcellents(Post $post)
     {
-        return Post::excellent()->recent();
+        return $post->getExcellents();
     }
 
     /**
      * 活跃
      * @return Post
      */
-    public function getActives()
+    public function getActives(Post $post)
     {
-        return Post::recentUpdated()->recent();
+        return $post->getActives();
     }
 
     /**
      * 最近
      * @return Post
      */
-    public function getRecents()
+    public function getRecents(Post $post)
     {
-        return Post::recent();
+        return $post->getRecents();
     }
 
     /**
      * 点赞
      * @return Post
      */
-    public function getVotes()
+    public function getVotes(Post $post)
     {
-        return Post::vote()->recentUpdated()->recent();
+        return $post->getVotes();
     }
 
     /**
      * 零回复
      * @return Post
      */
-    public function getZeroComent()
+    public function getZeroComent(Post $post)
     {
-        return Post::zeroComment()->recent();
+        return $post->getZeroComment();
     }
 
     /**
-     * 通过分类查找post
-     * @param $category_id
+     * 仅仅只返回Post信息
+     * @param $postId
      * @return Post
      */
-    public function getByCategory($category_id)
+    public function getByIdOnlyPost($postId)
     {
-        $posts = Category::findOrFail($category_id)
-                    ->posts();
-        return $posts;
+        return Post::findOrFail($postId);
     }
 
 
@@ -126,16 +107,7 @@ class PostShowService
                     ->take(config('blog.right_side_user_post'));
             }])
             ->findOrFail($postId);
-
-        //category posts
-        $categoryPosts = $this->getByCategory($post->category_id);
-        $categoryPosts = $categoryPosts->recent()
-            ->take(config('blog.right_side_catogry_post'))
-            ->get();
-
-        $data['post'] = $post;
-        $data['categoryPosts'] = $categoryPosts;
-        return $data;
+        return $post;
     }
 
     /**

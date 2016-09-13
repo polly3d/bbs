@@ -25,6 +25,7 @@
                     </li>
                     @endforeach
                 </ul>
+                {!! $posts->render() !!}
             </div>
         </div>
     </div>

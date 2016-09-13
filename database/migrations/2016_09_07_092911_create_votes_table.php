@@ -18,6 +18,7 @@ class CreateVotesTable extends Migration
             $table->integer('user_id')->unsign();
             $table->integer('voteable_id')->unsign();
             $table->string('voteable_type');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

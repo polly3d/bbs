@@ -2,12 +2,21 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\CommentService;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
 
 class CommentController extends Controller
 {
+    /**
+     * CommentController constructor.
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -34,9 +43,14 @@ class CommentController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, CommentService $service)
     {
-        //
+        $data = [
+            'post_id' => $request->post_id,
+            'content_md' => $request->content_md,
+        ];
+        $service->createComment($data);
+        return redirect(route('post.show',$request->post_id));
     }
 
     /**

@@ -3,9 +3,12 @@
 namespace App\Entity;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Comment extends Model
 {
+    use SoftDeletes;
+
     protected $fillable = ['content','content_md','post_id','user_id','vote_count'];
 
     public function setContentMdAttribute($value)
