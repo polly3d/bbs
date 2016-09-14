@@ -17,7 +17,7 @@ class DatabaseSeeder extends Seeder
         DB::table('users')->truncate();
         DB::table('categories')->truncate();
         DB::table('posts')->truncate();
-        DB::table('Comments')->truncate();
+        DB::table('comments')->truncate();
         DB::table('votes')->truncate();
 
         $this->call(UserSeeder::class);
