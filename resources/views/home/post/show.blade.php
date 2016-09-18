@@ -22,7 +22,7 @@
             </div>
             <div class="panel-body">
                 <div class="markdown-body" id="emojify">
-                    {{ $post->content }}
+                    {!! $post->content !!}
                 </div>
                 <div class="vote-btn">
                     <a href="{{ route('votePost',$post->id) }}" class="btn btn-primary btn-lg">
@@ -80,7 +80,7 @@
                             </a>
                         </span>
                         <div class="media-body markdown-reply content-body">
-                            {{ $comment->content }}
+                            {!! $comment->content !!}
                         </div>
                     </li>
                     @endforeach

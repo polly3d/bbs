@@ -23,7 +23,7 @@
             <li>
                 <a href="">{{ $comment->post->title }} {{ $comment->created_at }}</a>
                 <div class="media-body markdown-reply content-body">
-                    {{ $comment->content }}
+                    {!! $comment->content !!}
                 </div>
             </li>
             @endforeach

@@ -15,11 +15,17 @@ class MyTest extends TestCase
      */
     public function testExample()
     {
-        $user_id = 11;
-        $user = \App\Entity\User::findOrFail($user_id);
-        $userService = $this->app->make(UserService::class);
+        $mdParsedown = Parsedown::instance();
+        $expected = '<pre><code>hello world</code></pre>';
 
-        $comment = $userService->getCommentsByUser($user,true);
-        dd($comment->count());
+        $str = <<<'MD'
+```
+hello world
+```
+MD;
+
+        $actual = $mdParsedown->parse($str);
+
+        $this->assertEquals($expected,$actual);
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Polly3d\MarkdownParser;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -17,8 +18,7 @@ class Comment extends Model
 
         if($value)
         {
-            //todo:这里需要转换
-            $this->attributes['content'] = 'md:' . $value;
+            $this->attributes['content'] = MarkdownParser::text($value);
         }
     }
 

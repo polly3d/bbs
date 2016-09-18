@@ -71,7 +71,7 @@ class PostController extends Controller
         $this->validePost($request);
 
         $post = $service->createPost($request->only('title','category_id','content_md'));
-        return redirect(route('post.create'))
+        return redirect(route('post.show',$post->id))
             ->withSuccess('创建成功');
     }
 
